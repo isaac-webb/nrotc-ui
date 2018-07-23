@@ -1,0 +1,19 @@
+# Install the angular cli
+FROM node AS angular
+ENV NODE_ENV development
+RUN ["npm", "install", "-g", "@angular/cli"]
+
+# Make space for the application
+WORKDIR /app
+
+# Install application dependencies
+FROM angular AS dependencies
+COPY package*.json ./
+RUN ["npm", "install"]
+
+# Copy over the application files
+FROM dependencies
+COPY . ./
+
+# Set the default command to serve
+CMD ["ng", "serve", "--host", "0.0.0.0"]
